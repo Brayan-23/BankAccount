@@ -1,6 +1,6 @@
-package repository;
+package conta.repository;
 
-import model.Conta;
+import conta.model.Conta;
 
 public interface ContaRepository {
 

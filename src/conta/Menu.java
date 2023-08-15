@@ -1,34 +1,34 @@
+package conta;
+
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import model.ContaCorrente;
-import model.ContaPoupanca;
-import util.Cores;
+import conta.controller.ContaController;
+import conta.model.ContaPoupanca;
+import conta.model.ContaCorrente;
+import conta.util.Cores;
 
 public class Menu {
 
   public static Scanner leia = new Scanner(System.in);
-
+  private static final ContaController controller = new ContaController();
   public static void main(String[] args) {
 
-    int opcao = 0;
+    int opcao, numero, agencia, tipo, aniversario;
+    String titular;
+    float saldo, limite;
 
-    // Teste da Classe Conta Corrente
-    ContaCorrente cc1 = new ContaCorrente(1, 123, 1, "Adriana", 10000.0f, 1000.0f);
-    cc1.visualizar();
-    cc1.sacar(12000.0f);
-    cc1.visualizar();
-    cc1.depositar(5000.0f);
-    cc1.visualizar();
+    ContaCorrente cc1 = new ContaCorrente(controller.gerarNumero(), 123, 1, "João da Silva", 100f, 100.0f);
+    controller.cadastrar(cc1);
+    ContaCorrente cc2 = new ContaCorrente(controller.gerarNumero(), 124, 1, "Maria da Silva", 2000f, 100.0f);
+    controller.cadastrar(cc2);
+    ContaPoupanca cc3 = new ContaPoupanca(controller.gerarNumero(), 125, 2, "Mariane dos Santos", 4000f, 12);
+    controller.cadastrar(cc3);
+    ContaPoupanca cc4 = new ContaPoupanca(controller.gerarNumero(), 126, 2, "Juliane Santos", 8000f, 15);
+    controller.cadastrar(cc4);
 
-    // Teste da Classe Conta Poupança
-    ContaPoupanca cp1 = new ContaPoupanca(2, 123, 2, "Victor", 100000.0f, 15);
-    cp1.visualizar();
-    cp1.sacar(1000.0f);
-    cp1.visualizar();
-    cp1.depositar(5000.0f);
-    cp1.visualizar();
+    controller.listarTodas();
 
     while (true) {
 
@@ -70,34 +70,61 @@ public class Menu {
       switch (opcao) {
         case 1 -> {
           System.out.println("\n Criar Conta");
+
+          System.out.println("Digite sua Agência: ");
+          agencia = leia.nextInt();
+          System.out.println("Digite o nome do Titular: ");
+          leia.skip("\\R?");
+          titular = leia.nextLine();
+
+          do {
+            System.out.println("Digite o tipo de conta (1-CC ou 2-CP):");
+            tipo = leia.nextInt();
+          }while (tipo < 1 && tipo > 2);
+
+          System.out.println("Digite o saldo da conta (R$:");
+          saldo = leia.nextFloat();
+
+          switch (tipo){
+            case 1 -> {
+              System.out.println("Digite o limite de Crédito (R$): ");
+              limite = leia.nextFloat();
+              controller.cadastrar(new ContaCorrente(controller.gerarNumero(), agencia, tipo, titular, saldo, limite));
+            } case 2 -> {
+              System.out.println("Digite o dia do Aniversario da Conta (R$): ");
+              aniversario = leia.nextInt();
+              controller.cadastrar(new ContaPoupanca(controller.gerarNumero(), agencia, tipo, titular, saldo, aniversario));
+            }
+          }
           keyPress();
         }
         case 2 -> {
-          System.out.println("\n Listar todas as Contas");
+          System.out.println(Cores.TEXT_WHITE + "\n Listar todas as Contas");
+          controller.listarTodas();
           keyPress();
         }
         case 3 -> {
-          System.out.println("\n Buscar Conta por número");
+          System.out.println(Cores.TEXT_WHITE + "\n Buscar Conta por número");
           keyPress();
         }
         case 4 -> {
-          System.out.println("\n Atualizar dados da Conta");
+          System.out.println(Cores.TEXT_WHITE + "\n Atualizar dados da Conta");
           keyPress();
         }
         case 5 -> {
-          System.out.println("\n Apagar Conta");
+          System.out.println(Cores.TEXT_WHITE + "\n Apagar Conta");
           keyPress();
         }
         case 6 -> {
-          System.out.println("\n Sacar");
+          System.out.println(Cores.TEXT_WHITE + "\n Sacar");
           keyPress();
         }
         case 7 -> {
-          System.out.println("\n Depositar");
+          System.out.println(Cores.TEXT_WHITE + "\n Depositar");
           keyPress();
         }
         case 8 -> {
-          System.out.println("\n Transferir");
+          System.out.println(Cores.TEXT_WHITE + "\n Transferir");
           keyPress();
         }
         default -> {
